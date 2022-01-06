@@ -1,6 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+require("dotenv").config();
 const express = require("express");
+// const fs = require("fs");
+const path = require("path");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
 
@@ -20,14 +21,7 @@ const app = express();
 app.use(express.json());
 
 const cors = require("cors");
-app.use(
-  cors({
-    origin: [
-      "http://localhost:1234",
-      "https://nostalgic-turing-13f97d.netlify.app/",
-    ],
-  })
-);
+app.use(cors());
 
 function getTweetId(tweetURL) {
   const splitTweetURL = tweetURL.split("/");
@@ -57,15 +51,14 @@ app.get("/get-data", async (req, res) => {
 
 app.post("/get-image", async (req, res) => {
   const { tweetURL, theme, lang } = req.body;
-  // const { tweetURL, theme, lang } = req.query;
 
   const tweetsTxtPath = path.join(__dirname, "tweets.txt");
   const unixTime = Math.round(+new Date() / 1000);
   const dataToSave = `${tweetURL} ${unixTime}\n`;
 
-  fs.appendFile(tweetsTxtPath, dataToSave, (err) => {
-    if (err) throw err;
-  });
+  // fs.appendFile(tweetsTxtPath, dataToSave, (err) => {
+  //   if (err) throw err;
+  // });
 
   const screenshot = await createScreenshot({
     width: TWEET_WIDTH,
