@@ -23,15 +23,12 @@ app.use(express.json());
 const cors = require("cors");
 app.use(
   cors({
-    origin: ["http://127.0.0.1:1234", "http://localhost:1234"],
+    origin: [
+      "http://localhost:1234",
+      "https://nostalgic-turing-13f97d.netlify.app/",
+    ],
   })
 );
-
-// app.use(express.static(path.join(__dirname, "..", "dist")));
-
-// app.get("/", (req, res) => {
-//   res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
-// });
 
 function getTweetId(tweetURL) {
   const splitTweetURL = tweetURL.split("/");
@@ -142,5 +139,5 @@ const createScreenshot = async (props) => {
 };
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${HOST}:${PORT}`);
+  console.log(`Example app listening on port ${PORT}`);
 });
