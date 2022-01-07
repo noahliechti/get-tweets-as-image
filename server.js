@@ -1,12 +1,10 @@
 require("dotenv").config();
 const express = require("express");
-// const fs = require("fs");
-const path = require("path");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 3000;
-const HOST = "localhost";
 const HEADERS = {
   Authorization: "Bearer " + process.env.BEARER_TOKEN,
 };
@@ -20,7 +18,6 @@ const app = express();
 
 app.use(express.json());
 
-const cors = require("cors");
 app.use(cors());
 
 function getTweetId(tweetURL) {
@@ -29,6 +26,10 @@ function getTweetId(tweetURL) {
   const splitLastItem = lastItem.split("?");
   return splitLastItem[0];
 }
+
+app.get("/", (req, res) => {
+  res.send("hoi");
+});
 
 app.get("/get-data", async (req, res) => {
   const tweetId = getTweetId(req.query.tweetURL);
@@ -52,14 +53,6 @@ app.get("/get-data", async (req, res) => {
 app.post("/get-image", async (req, res) => {
   const { tweetURL, theme, lang } = req.body;
 
-  const tweetsTxtPath = path.join(__dirname, "tweets.txt");
-  const unixTime = Math.round(+new Date() / 1000);
-  const dataToSave = `${tweetURL} ${unixTime}\n`;
-
-  // fs.appendFile(tweetsTxtPath, dataToSave, (err) => {
-  //   if (err) throw err;
-  // });
-
   const screenshot = await createScreenshot({
     width: TWEET_WIDTH,
     theme,
@@ -70,7 +63,7 @@ app.post("/get-image", async (req, res) => {
     lang,
   });
 
-  res.send(screenshot);
+  res.end(screenshot);
 });
 
 const createScreenshot = async (props) => {
