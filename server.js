@@ -50,7 +50,7 @@ app.get("/get-data", async (req, res) => {
     });
 });
 
-app.post("/get-image", async (req, res) => {
+app.put("/get-image", async (req, res) => {
   const { tweetURL, theme, lang } = req.body;
 
   const screenshot = await createScreenshot({
