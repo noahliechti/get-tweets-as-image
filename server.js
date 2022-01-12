@@ -1,13 +1,9 @@
 require("dotenv").config();
 const express = require("express");
-const axios = require("axios");
 const puppeteer = require("puppeteer");
 const cors = require("cors");
 
 const PORT = process.env.PORT || 3000;
-const HEADERS = {
-  Authorization: "Bearer " + process.env.BEARER_TOKEN,
-};
 
 const TWEET_WIDTH = 1000;
 const TWEET_PADDING = 25;
@@ -15,8 +11,6 @@ const TWEET_HIDE_THREAD = true;
 const TWEET_HIDE_CARD = false;
 
 const app = express();
-
-app.use(express.json());
 
 app.use(cors());
 
@@ -27,31 +21,9 @@ function getTweetId(tweetURL) {
   return splitLastItem[0];
 }
 
-app.get("/", (req, res) => {
-  res.send("hoi");
-});
-
-app.get("/get-data", async (req, res) => {
-  const tweetId = getTweetId(req.query.tweetURL);
-  var config = {
-    method: "get",
-    // TODO: what attributes do I need?
-    url: `https://api.twitter.com/2/tweets/${tweetId}?tweet.fields=created_at,attachments&expansions=author_id`,
-    headers: HEADERS,
-  };
-
-  axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-      res.json(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-});
-
-app.put("/get-image", async (req, res) => {
-  const { tweetURL, theme, lang } = req.body;
+app.get("/get-image", async (req, res) => {
+  // req.params, req.query, req.body
+  const { tweetURL, theme, language } = req.query;
 
   const screenshot = await createScreenshot({
     width: TWEET_WIDTH,
@@ -60,15 +32,15 @@ app.put("/get-image", async (req, res) => {
     tweetId: getTweetId(tweetURL),
     hideCard: TWEET_HIDE_CARD,
     hideThread: TWEET_HIDE_THREAD,
-    lang,
+    language,
   });
 
-  res.end(screenshot);
+  res.send({ image: screenshot });
 });
 
 const createScreenshot = async (props) => {
   try {
-    const { lang, width, theme, padding, hideCard, hideThread, tweetId } =
+    const { language, width, theme, padding, hideCard, hideThread, tweetId } =
       props;
 
     const browser = await puppeteer.launch({
@@ -78,7 +50,7 @@ const createScreenshot = async (props) => {
 
     const page = await browser.newPage();
     await page.goto(
-      `https://platform.twitter.com/embed/index.html?dnt=true&embedId=twitter-widget-0&frame=false&hideCard=${hideCard}&hideThread=${hideThread}&id=${tweetId}&lang=${lang}&theme=${theme}&widgetsVersion=ed20a2b%3A1601588405575`,
+      `https://platform.twitter.com/embed/index.html?dnt=true&embedId=twitter-widget-0&frame=false&hideCard=${hideCard}&hideThread=${hideThread}&id=${tweetId}&language=${language}&theme=${theme}&widgetsVersion=ed20a2b%3A1601588405575`,
       { waitUntil: "networkidle0" }
     );
 
@@ -119,7 +91,7 @@ const createScreenshot = async (props) => {
 
     return imageBuffer;
   } catch (err) {
-    console.log(err);
+    console.log("My error", err);
   }
 };
 
