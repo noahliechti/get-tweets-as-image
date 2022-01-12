@@ -3,23 +3,20 @@ const express = require("express");
 const puppeteer = require("puppeteer");
 const cors = require("cors");
 
-const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(cors());
+
+const PORT = process.env.PORT || 3002;
 
 const TWEET_WIDTH = 1000;
 const TWEET_PADDING = 25;
 const TWEET_HIDE_THREAD = true;
 const TWEET_HIDE_CARD = false;
 
-const app = express();
-
-app.use(cors());
-
-function getTweetId(tweetURL) {
-  const splitTweetURL = tweetURL.split("/");
-  const lastItem = splitTweetURL[splitTweetURL.length - 1];
-  const splitLastItem = lastItem.split("?");
-  return splitLastItem[0];
-}
+app.get("/get-oauth", (req, res) => {
+  const { oauth_token, oauth_verifier } = req.query;
+  console.log("test", oauth_token, oauth_verifier);
+});
 
 app.get("/get-image", async (req, res) => {
   // req.params, req.query, req.body
@@ -92,8 +89,23 @@ const createScreenshot = async (props) => {
     return imageBuffer;
   } catch (err) {
     console.log("My error", err);
+    // next();
   }
 };
+
+function getTweetId(tweetURL) {
+  const splitTweetURL = tweetURL.split("/");
+  const lastItem = splitTweetURL[splitTweetURL.length - 1];
+  const splitLastItem = lastItem.split("?");
+  return splitLastItem[0];
+}
+
+function errorHandler(err, req, res, next) {
+  // res.json({err: err})
+  console.log("error");
+}
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
