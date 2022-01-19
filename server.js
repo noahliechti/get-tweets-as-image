@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3000;
 
 const TWEET_WIDTH = 1000;
 const TWEET_PADDING = 25;
@@ -14,7 +14,6 @@ const TWEET_HIDE_THREAD = true;
 const TWEET_HIDE_CARD = false;
 
 app.get("/get-image", async (req, res) => {
-  // req.params, req.query, req.body
   const { tweetURL, theme, language } = req.query;
 
   const screenshot = await createScreenshot({
@@ -84,7 +83,6 @@ const createScreenshot = async (props) => {
     return imageBuffer;
   } catch (err) {
     console.log("My error", err);
-    // next();
   }
 };
 
