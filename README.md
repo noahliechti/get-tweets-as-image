@@ -1,4 +1,4 @@
-# Get screenshots of Tweets with Puppeteer API
+# Get screenshots of Tweets with Puppeteer
 
 **Hint** To run puppeteer on Heroku I needed to add the `puppeteer heroku buildpack`.
 
