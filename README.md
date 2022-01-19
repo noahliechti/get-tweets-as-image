@@ -46,3 +46,5 @@ fetch(
 ```jsx
 <img src={`data:image/png;base64,${imageData}`} alt="tweet" />
 ```
+
+(inspired by https://github.com/ozgrozer/tweet-image)
