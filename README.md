@@ -48,3 +48,8 @@ fetch(
 ```
 
 (inspired by https://github.com/ozgrozer/tweet-image)
+
+## Check out my serverless repo
+
+[Get tweets serverless with Netlify](https://github.com/noahliechti/get-tweet-as-image-serverless)
+
